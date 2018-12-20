@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ImageDupliFinder": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\jimmy\\Pictures *.jpg"
+    }
+  }
+}
