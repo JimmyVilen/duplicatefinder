@@ -51,6 +51,42 @@ namespace ImageDupliFinder
             return output;
         }
 
+        public string MoveDuplicates(string path_to_moved_files, string path_pattern)
+        {
+            Console.WriteLine($"Moving duplicates");
+
+            string output = "\n\n";
+            for (int i = 0; i < _duplicates.Length; i++)
+            {
+                var df = _duplicates[i].ToArray();
+                List<FileItem> files_to_move = new List<FileItem>();
+                foreach (var f in df)
+                {
+                    // check if file should be moved
+                    if (f.AbsolutePath.Contains(path_pattern))
+                    {
+                        files_to_move.Add(f);
+                    }
+                }
+
+                // check so not all duplicates files was in search pattern path
+                if (files_to_move.Count < df.Length)
+                {
+                    foreach (var f in files_to_move)
+                    {
+                        var dest_filepath = System.IO.Path.Combine(
+                            path_to_moved_files,  
+                            $"{System.IO.Path.GetFileNameWithoutExtension(f.Filename)}_{Guid.NewGuid().ToString()}{System.IO.Path.GetExtension(f.Filename)}");
+
+                        System.IO.File.Move(f.AbsolutePath, dest_filepath);
+                        output += $"Moved: {f.AbsolutePath} --> {dest_filepath}\n";
+                    }
+                }
+                drawTextProgressBar(i, _duplicates.Length);
+            }
+            return output;
+        }
+
         public List<FileItem> GetDuplicatesList()
         {
             Console.WriteLine($"Creating result with duplicates");
